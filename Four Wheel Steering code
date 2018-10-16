@@ -1,0 +1,203 @@
+#include <Servo.h>
+#include <math.h>
+Servo myservo1;    // Define four Servo Motors
+Servo myservo2;
+Servo myservo3;
+Servo myservo4;
+double potpin = 0;  // Define Potentiometer 
+
+double w = 8 ;       // Specift width of Vehicle
+
+double input;
+double val2;
+double val3;
+double val5;
+double val6;
+double val;
+double val9;
+double x;
+double inner;
+double outer;
+double variable;
+double variable2;
+double OA;
+double N1;
+double N2;
+double N3;
+double N4;
+double pi = 3.14159265;
+int pushButton = 2 ;
+int buttonState = 0 ;
+int pushButton2 = 4 ;
+int buttonState2 = 0 ;
+
+
+
+void setup() 
+{
+	
+	pinMode(6, OUTPUT);
+	pinMode(3, OUTPUT);
+	pinMode(11, OUTPUT);
+	pinMode(9, OUTPUT);
+	myservo1.attach(13);
+	myservo2.attach(7);
+	myservo3.attach(8);
+	myservo4.attach(12);
+	Serial.begin(9600);
+	pinMode(pushButton, INPUT);
+	pinMode(pushButton2, INPUT);
+	digitalWrite(pushButton, HIGH); 
+	digitalWrite(pushButton2, HIGH);  	
+}
+void loop() 
+{
+	buttonState = digitalRead(pushButton);
+	buttonState2 = digitalRead(pushButton2);
+	input = analogRead(potpin);
+	if(buttonState==1&&buttonState2==1)
+	
+	{
+		
+		double l = 10;
+		if (input < 500)
+		{  
+			inner = map(input, 0, 1023, 0, 180);
+			OA = 90 - inner ;
+			variable = ((OA*3.14159265)/180) ;
+			x = l/(tan(variable)) ;  
+			variable2 = atan((x/(x+w))*tan(variable));  
+			outer = (variable2*180/3.14159265) ;
+			myservo1.write(inner);
+			myservo2.write(90 - outer);
+			myservo3.write(90);
+			myservo4.write(90);
+			
+			N1 = ( (255*x*cos(outer * pi / 180)) /((x + w)* cos((90 - inner)* pi/ 180))) ;
+			N3 = ( (255 * x * cos(outer * pi / 180) /(x + w) )) ;
+			N4 = ( (255 * cos(outer * pi / 180) ) ) ;
+			analogWrite(6, 255);
+			analogWrite(3, N1);
+			analogWrite(9, N3);
+			analogWrite(11, N4);
+			
+		}
+		else if (input > 540)
+		{
+			inner = map(input, 0, 1023, 0, 180);
+			OA = 90 + inner ;
+			variable = ((OA*3.14159265)/180) ;
+			x = l/(tan(variable)) ;
+			variable2 = atan((x/(x+w))*tan(variable));
+			outer = (variable2*180/3.) ;
+			myservo1.write(90 + outer);
+			
+			myservo2.write(inner);
+			myservo3.write(90);
+			myservo4.write(90);
+
+			N1 = ( (255* x * cos(outer*pi/180)) /((x + w)*cos((90 - inner)* pi/ 180))) ;
+			N3 = ( (255 * x * cos(outer * pi / 180) /(x + w) )) ;
+			N4 = ( (255 * cos(outer * pi / 180) ) ) ;
+			analogWrite(6, N1);
+			analogWrite(3, 255);
+			analogWrite(9, N4);
+			analogWrite(11, N3);
+		}
+		else 
+		{  myservo2.write(90);
+			myservo1.write(90);
+			myservo3.write(90);
+			myservo4.write(90);
+			
+			analogWrite(6, 255);
+			analogWrite(3, 255);
+			analogWrite(9, 255);
+			analogWrite(11, 255);
+			
+		}	
+	}
+	
+	else if (buttonState==0&&buttonState2==0)
+	{   double l = 5;
+		
+		inner = map(input, 0, 1023, 0, 180);
+		myservo1.write(inner);
+		myservo2.write(inner);
+		myservo3.write(inner);
+		myservo4.write(inner);
+		analogWrite(6, 255);
+		analogWrite(3, 255);
+		analogWrite(9, 255);
+		analogWrite(11, 255);
+		
+	}
+	else if (buttonState==1&&buttonState2==0)
+	{   double l = 5;
+		
+		
+		if (input < 500)
+		{  
+			inner = map(input, 0, 1023, 0, 180);
+			OA = 90 - inner ;
+			variable = ((OA*3.1415926)/180) ;
+			x = l/(tan(variable)) ;  
+			variable2 = atan((x/(x+w))*tan(variable));  
+			outer = (variable2*180/3.1415926) ;
+			myservo1.write(inner);
+			myservo2.write(90 - outer);
+			myservo3.write(180 - inner);
+			myservo4.write(90 + outer);
+			N1 = ( (255*x*cos(outer*pi / 180)) /((x + w)* cos((90 - inner)* pi/ 180))) ;
+			analogWrite(6, N1);
+			analogWrite(3, 255);
+			analogWrite(9, 255);
+			analogWrite(11, N1);
+
+		}
+		else if (input > 540)
+		{
+			inner = map(input, 0, 1023, 0, 180);
+			OA = 90 + inner ;
+			variable = ((OA*3.145926) ;
+			x = l/(tan(variable)) ;
+			variable2 = atan((x/(x+w))*tan(variable));
+			outer = (variable2*180/3.1415926) ;
+
+			myservo1.write(90 + outer);
+			myservo2.write(inner);
+			myservo3.write(90 - outer);
+			myservo4.write(180 - inner);
+			
+			N1 = ( (255*x*cos(outer*pi/180)) /((x + w)* cos((90 - inner)* pi/ 180))) ;
+			analogWrite(6, N1);
+			analogWrite(3, 255);
+			analogWrite(9, N1);
+			analogWrite(11, 255);
+		}
+		else 
+		{  myservo2.write(90);
+			myservo1.write(90);
+			myservo3.write(90);
+			myservo4.write(90);
+			
+			analogWrite(6, 255);
+			analogWrite(3, 255);
+			analogWrite(9, 255);
+			analogWrite(11, 255);
+		}
+	}
+	else if (buttonState==0&&buttonState2==1)
+	{       myservo1.write(90 + 51.34019175);
+		myservo2.write(38.65980825);
+		myservo3.write(38.65980825);
+		myservo4.write(90 + 51.34019175);
+		
+		analogWrite(6, 255);
+		analogWrite(3, 255);
+		analogWrite(9, 255);
+		analogWrite(11, 255);
+		
+	}
+
+}
